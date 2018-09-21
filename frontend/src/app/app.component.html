@@ -6,6 +6,7 @@
             <td>Id</td>
             <td>Name</td>
             <td>Company</td>
+            <td>Email</td>
             <td>Edit</td>
             <td>Delete</td>
         </tr>
@@ -25,7 +26,8 @@
 <ng-template #readOnlyTemplate let-user>
     <td>{{user.Id}}</td>
     <td>{{user.Name}}</td>
-    <td>{{user.Age}}</td>
+    <td>{{user.Company}}</td>
+    <td>{{user.Email}}</td>
     <td>
         <input type="button" value="Edit" class="btn btn-default" (click)="editUser(user)" />
     </td>
@@ -43,7 +45,10 @@
         <input type="text" [(ngModel)]="editedUser.Name" class="form-control" />
     </td>
     <td>
-        <input type="text" [(ngModel)]="editedUser.Age" class="form-control" />
+        <input type="text" [(ngModel)]="editedUser.Company" class="form-control" />
+    </td>
+    <td>
+        <input type="text" [(ngModel)]="editedUser.Email" class="form-control" />
     </td>
     <td>
         <input type="button" value="Сохранить" (click)="saveUser()" class="btn btn-success" />

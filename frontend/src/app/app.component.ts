@@ -35,14 +35,14 @@ export class AppComponent implements OnInit {
     }
     // добавление пользователя
     addUser() {
-        this.editedUser = new User(0,"",0);
+        this.editedUser = new User(0,"","","");
         this.users.push(this.editedUser);
         this.isNewRecord = true;
     }
    
     // редактирование пользователя
     editUser(user: User) {
-        this.editedUser = new User(user.Id, user.Name, user.Age);
+        this.editedUser = new User(user.Id, user.Name, user.Company, user.Email);
     }
     // загружаем один из двух шаблонов
     loadTemplate(user: User) {
