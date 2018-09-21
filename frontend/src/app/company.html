@@ -1,0 +1,49 @@
+<h1>Список компаний</h1>
+<input type="button" value="Добавить" class="btn btn-default" (click)="addCompany()" />
+<table class="table table-striped" bordercolor="black" border="1" width="80%">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Имя</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let company of companys">
+            <ng-template [ngTemplateOutlet]="loadTemplate(company)" 
+                        [ngTemplateOutletContext]="{ $implicit: company}">
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+<div>{{statusMessage}}</div>
+   
+   
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-user>
+    <td>{{company.Id}}</td>
+    <td>{{company.Name}}</td>
+    <td>
+        <input type="button" value="Изменить" class="btn btn-default" (click)="editCompany(company)" />
+    </td>
+    <td>
+        <input type="button" value="Удалить" (click)="deleteCompany(company)" class="btn btn-danger" />
+    </td>
+</ng-template>
+  
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+    <td>
+        <input type="text" [(ngModel)]="editedCompany.Id" readonly disabled class="form-control" />
+    </td>
+    <td>
+        <input type="text" [(ngModel)]="editedCompany.Name" class="form-control" />
+    </td>
+    <td>
+        <input type="button" value="Сохранить" (click)="saveCompany()" class="btn btn-success" />
+    </td>
+    <td>
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+    </td>
+</ng-template>
