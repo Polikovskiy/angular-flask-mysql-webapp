@@ -1,12 +1,13 @@
-<h1>Список компаний</h1>
-<input type="button" value="Добавить" class="btn btn-default" (click)="addCompany()" />
+<h1>Company list</h1>
+<input type="button" value="add" class="btn btn-default" (click)="addCompany()" />
 <table class="table table-striped" bordercolor="black" border="1" width="80%">
     <thead>
         <tr>
             <td>Id</td>
-            <td>Имя</td>
-            <td></td>
-            <td></td>
+            <td>Name</td>
+            <td>Quota</td>
+            <td>Edit</td>
+            <td>Delete</td>
         </tr>
     </thead>
     <tbody>
@@ -21,14 +22,15 @@
    
    
 <!--шаблон для чтения-->
-<ng-template #readOnlyTemplate let-user>
+<ng-template #readOnlyTemplate let-company>
     <td>{{company.Id}}</td>
     <td>{{company.Name}}</td>
+    <td>{{company.Quota}}</td>
     <td>
-        <input type="button" value="Изменить" class="btn btn-default" (click)="editCompany(company)" />
+        <input type="button" value="Edit" class="btn btn-default" (click)="editCompany(company)" />
     </td>
     <td>
-        <input type="button" value="Удалить" (click)="deleteCompany(company)" class="btn btn-danger" />
+        <input type="button" value="Delete" (click)="deleteCompany(company)" class="btn btn-danger" />
     </td>
 </ng-template>
   
@@ -41,9 +43,12 @@
         <input type="text" [(ngModel)]="editedCompany.Name" class="form-control" />
     </td>
     <td>
-        <input type="button" value="Сохранить" (click)="saveCompany()" class="btn btn-success" />
+        <input type="text" [(ngModel)]="editedCompany.Quota" class="form-control" />
     </td>
     <td>
-        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+        <input type="button" value="Save" (click)="saveCompany()" class="btn btn-success" />
+    </td>
+    <td>
+        <input type="button" value="escape" (click)="cancel()" class="btn btn-warning" />
     </td>
 </ng-template>

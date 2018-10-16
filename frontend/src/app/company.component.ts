@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
   
 @Component({ 
     selector: 'company', 
-    templateUrl: './company.html',
+    templateUrl: './company.component.html',
     providers: [CompanyService]
 }) 
 export class CompanyComponent implements OnInit {
@@ -35,14 +35,14 @@ export class CompanyComponent implements OnInit {
     }
     // добавление компании
     addCompany() {
-        this.editedCompany = new Company(0,"");
+        this.editedCompany = new Company(0,"",0);
         this.companys.push(this.editedCompany);
         this.isNewRecord = true;
     }
    
     // редактирование компании
     editCompany(company: Company) {
-        this.editedCompany = new Company(company.Id, company.Name);
+        this.editedCompany = new Company(company.Id, company.Name, company.Quota);
     }
     // загружаем один из двух шаблонов
     loadTemplate(company: Company) {
@@ -56,8 +56,9 @@ export class CompanyComponent implements OnInit {
     saveCompany() {
         if (this.isNewRecord) {
             // добавляем компанию
+            console.log(this.editedCompany)
             this.serv.createCompany(this.editedCompany).subscribe(data => {
-                this.statusMessage = 'Данные успешно добавлены',
+                this.statusMessage = 'company added',
                 this.loadCompanys();
             });
             this.isNewRecord = false;
@@ -65,7 +66,7 @@ export class CompanyComponent implements OnInit {
         } else {
             // изменяем компанию
             this.serv.updateCompany(this.editedCompany.Id, this.editedCompany).subscribe(data => {
-                this.statusMessage = 'Данные успешно обновлены',
+                this.statusMessage = 'company updated',
                 this.loadCompanys();
             });
             this.editedCompany = null;
@@ -83,7 +84,7 @@ export class CompanyComponent implements OnInit {
     // удаление компании
     deleteCompany(company: Company) {
         this.serv.deleteCompany(company.Id).subscribe(data => {
-            this.statusMessage = 'Данные успешно удалены',
+            this.statusMessage = 'company delete',
             this.loadCompanys();
         });
     }

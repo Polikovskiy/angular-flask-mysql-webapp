@@ -1,0 +1,34 @@
+<h1>Ubsuser list</h1>
+<input type="button" value="generate data" class="btn btn-default" (click)="generate_data()" />
+<input type="button" value="show data" class="btn btn-default" (click)="show()" />
+<select size="1">
+    <option [(ngModel)]="month">1 month</option>
+    <option [(ngModel)]="month">2</option>
+    <option [(ngModel)]="month" value = "3" >3</option>
+    <option [(ngModel)]="month">4</option>
+    <option [(ngModel)]="month">5</option>
+    <option [(ngModel)]="month">6</option>
+</select>
+<input type="number" [(ngModel)]="month" />
+<table class="table table-striped" bordercolor="black" border="1" width="80%">
+    <thead>
+        <tr align="center">
+            <td>Name</td>
+            <td>Quota</td>
+            <td>Used</td>           
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let ubsuser of ubsusers">
+            <ng-template [ngTemplateOutlet]="loadTemplate()" 
+                        [ngTemplateOutletContext]="{ $implicit: ubsuser}">
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #readOnlyTemplate let-ubsuser>
+    <td>{{ubsuser.Name}}</td>
+    <td>{{ubsuser.Quota}}</td>
+    <td>{{ubsuser.Used}}</td>
+</ng-template>

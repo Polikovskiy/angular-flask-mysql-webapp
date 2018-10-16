@@ -5,8 +5,8 @@
         <tr align="center">
             <td>Id</td>
             <td>Name</td>
-            <td>Company</td>
             <td>Email</td>
+            <td>Company</td>           
             <td>Edit</td>
             <td>Delete</td>
         </tr>
@@ -26,8 +26,9 @@
 <ng-template #readOnlyTemplate let-user>
     <td>{{user.Id}}</td>
     <td>{{user.Name}}</td>
-    <td>{{user.Company}}</td>
     <td>{{user.Email}}</td>
+    <td>{{user.Company}}</td>
+    
     <td>
         <input type="button" value="Edit" class="btn btn-default" (click)="editUser(user)" />
     </td>
@@ -45,15 +46,24 @@
         <input type="text" [(ngModel)]="editedUser.Name" class="form-control" />
     </td>
     <td>
-        <input type="text" [(ngModel)]="editedUser.Company" class="form-control" />
+        <input type="text" [(ngModel)]="editedUser.Email" name="email" class="form-control" #email="ngModel" 
+        required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}" />
+        <div [hidden]="email.valid || email.untouched" class="alert alert-danger">
+                          Некорректный email
+        </div>
     </td>
     <td>
-        <input type="text" [(ngModel)]="editedUser.Email" class="form-control" />
+        <input type="text" [(ngModel)]="editedUser.Company" company="company" class="form-control" #company="ngModel" 
+        required pattern="[0-9]{1,2}"/>
+        <div [hidden]="company.valid || company.untouched" class="alert alert-danger">
+                          Некорректная компания
+         </div>
+    </td>
+    
+    <td>
+        <input type="button" value="save" (click)="saveUser()" class="btn btn-success" />
     </td>
     <td>
-        <input type="button" value="Сохранить" (click)="saveUser()" class="btn btn-success" />
-    </td>
-    <td>
-        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+        <input type="button" value="escape" (click)="cancel()" class="btn btn-warning" />
     </td>
 </ng-template>

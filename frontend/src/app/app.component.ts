@@ -35,14 +35,15 @@ export class AppComponent implements OnInit {
     }
     // добавление пользователя
     addUser() {
-        this.editedUser = new User(0,"","","");
+        this.editedUser = new User(0,"e","e",0);
         this.users.push(this.editedUser);
         this.isNewRecord = true;
+        console.log(this.isNewRecord)
     }
    
     // редактирование пользователя
     editUser(user: User) {
-        this.editedUser = new User(user.Id, user.Name, user.Company, user.Email);
+        this.editedUser = new User(user.Id, user.Name, user.Email, user.Company);
     }
     // загружаем один из двух шаблонов
     loadTemplate(user: User) {
@@ -56,16 +57,24 @@ export class AppComponent implements OnInit {
     saveUser() {
         if (this.isNewRecord) {
             // добавляем пользователя
+            console.log(this.editedUser)
             this.serv.createUser(this.editedUser).subscribe(data => {
-                this.statusMessage = 'Данные успешно добавлены',
-                this.loadUsers();
+                if (data == "ok") {
+                    this.statusMessage = 'user added',
+                    this.loadUsers();
+                } else {
+                    this.statusMessage = 'add failure',
+                    this.loadUsers();
+                }
+
             });
             this.isNewRecord = false;
             this.editedUser = null;
         } else {
             // изменяем пользователя
+            console.log(this.editedUser+"create")
             this.serv.updateUser(this.editedUser.Id, this.editedUser).subscribe(data => {
-                this.statusMessage = 'Данные успешно обновлены',
+                this.statusMessage = 'Users updated',
                 this.loadUsers();
             });
             this.editedUser = null;
@@ -83,7 +92,7 @@ export class AppComponent implements OnInit {
     // удаление пользователя
     deleteUser(user: User) {
         this.serv.deleteUser(user.Id).subscribe(data => {
-            this.statusMessage = 'Данные успешно удалены',
+            this.statusMessage = 'users delete',
             this.loadUsers();
         });
     }

@@ -14,7 +14,7 @@ export class UserService{
     }
   
     createUser(user: User){
-        return this.http.post(this.url, user); 
+        return this.http.post(this.url, user);
     }
     updateUser(id: number, user: User) {
         const urlParams = new HttpParams().set("id", id.toString());

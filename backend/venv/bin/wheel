@@ -1,10 +1,10 @@
-#!/home/dmitriy/projects/angular_flask_mysql_webapp/backend/venv/bin/python
+#!/home/dmitriy/projects/angular_flask_mysql_webapp/backend/venv/bin/python3
 
 # -*- coding: utf-8 -*-
 import re
 import sys
 
-from wheel.tool import main
+from wheel.cli import main
 
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])

@@ -1,4 +1,4 @@
-#!/home/dmitriy/projects/angular_flask_mysql_webapp/backend/venv/bin/python
+#!/home/dmitriy/projects/angular_flask_mysql_webapp/backend/venv/bin/python3
 
 # -*- coding: utf-8 -*-
 import re
