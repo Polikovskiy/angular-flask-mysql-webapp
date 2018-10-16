@@ -3,8 +3,11 @@ from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey, update
 from sqlalchemy.orm import relationship, session
-from resourses.res import *
-#from models.user import users
+from venv.resourses.res import *
+#from venv.models.users import users
+#from venv.models.companys import companys
+from venv.models.company_ubsusers import company_ubsusers
+from venv.models.transfer_log import transfer_log
 
 
 app = Flask(__name__)
@@ -16,63 +19,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///DB.sqlite3'
 db = SQLAlchemy(app)
 
 TRANSFER_LOG_LIST = []
-
-
-
-
-class companys(db.Model):
-
-    id = db.Column( db.Integer, primary_key = True)
-    name = db.Column(db.String(30))
-    quota = db.Column(db.Integer)
-    users = relationship("users", backref="companys")
-
-    def __init__(self, name, quota):
-        self.name = name
-        self.quota = quota
-
-
-class users(db.Model):
-
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(30))
-    email = db.Column(db.String(30))
-    company = db.Column(db.Integer, ForeignKey('companys.id'))
-
-    def __init__(self, name, email, company):
-        self.name = name
-        self.email = email
-        self.company = company
-
-
-class transfer_log(object):
-
-    def __init__(self, date, name, resourses, company_id):
-        self.date = date
-        self.name = name
-        self.resourses = resourses
-        self.transferred = transfer_data_volume()
-        self.company_id = company_id
-
-    def __str__(self):
-        return  "date: " + self.date + " name: " + self.name + " transferred: " + str(self.transferred)
-
-    def __repr__(self):
-        return  "date: " + self.date + " name: " + self.name + " transferred: " + str(self.transferred)
-
-
-class company_ubsusers(object):
-
-    def __init__(self, name, quota, used):
-        self.name = name
-        self.quota = quota
-        self.used = used
-
-    def __str__(self):
-        return   " name: " + self.name + " used: " + str(self.used) + " quota: " + str(self.quota)
-
-    def __repr__(self):
-        return " name: " + self.name + " used: " + str(self.used) + " quota: " + str(self.quota)
 
 
 @app.route('/')
@@ -92,19 +38,19 @@ def get_users():
         user_dict["Id"] = user.id
         user_dict["Name"] = user.name
         user_dict["Email"] = user.email
-        user_dict["Company"]  = companys.query.filter_by(id=user.company).first().name
+        user_dict["Company"] = companys.query.filter_by(id=user.company).first().name
         user_json.append(user_dict)
 
     return jsonify(user_json)
 
 
-@app.route("/users", methods = ['POST'])
+@app.route("/users", methods=['POST'])
 def add_new_user():
-    user_reuqest = request.get_json()
+    user_request = request.get_json()
 
-    if user_reuqest:
+    if user_request:
 
-        new_user = users(user_reuqest['Name'], user_reuqest['Email'], int(user_reuqest['Company']))
+        new_user = users(user_request['Name'], user_request['Email'], int(user_request['Company']))
         db.session.add(new_user)
         db.session.commit()
 
@@ -115,7 +61,7 @@ def add_new_user():
         return jsonify("failure")
 
 
-@app.route("/users", methods = ["DELETE"])
+@app.route("/users", methods=["DELETE"])
 def delete_user():
 
     if request.args.get("id"):
@@ -127,7 +73,7 @@ def delete_user():
     return jsonify("ok")
 
 
-@app.route("/users", methods = ["PUT"])
+@app.route("/users", methods=["PUT"])
 def update_user():
 
     user_request = request.get_json()
@@ -161,7 +107,7 @@ def company():
     return jsonify(company_json)
 
 
-@app.route("/company", methods = ['POST'])
+@app.route("/company", methods=['POST'])
 def add_new_company():
     company = request.get_json()
 
@@ -174,7 +120,7 @@ def add_new_company():
     return jsonify("ok")
 
 
-@app.route("/company", methods = ["PUT"])
+@app.route("/company", methods=["PUT"])
 def update_company():
 
     company_request = request.get_json()
@@ -198,7 +144,6 @@ def update_company():
 def generate_data():
 
     user_list = users.query.all()
-    company_list = companys.query.all()
     transfer_log_list = [[],[],[],[],[],[]]
 
     for user in user_list:
@@ -212,18 +157,13 @@ def generate_data():
                 transfer_log_list_month.append(user_transfer_log)
             transfer_log_list[user_date_transfer_list.index(month)]  += transfer_log_list_month
 
-
-
-
     global TRANSFER_LOG_LIST
     TRANSFER_LOG_LIST = transfer_log_list
-
-
 
     return jsonify('ok')
 
 
-@app.route("/show", methods = ['POST'])
+@app.route("/show", methods=['POST'])
 def show():
 
     ubsusers_list = []
@@ -258,8 +198,30 @@ def show():
         ubsuser_dict["Used"] = company.used
         company_ubsusers_json.append(ubsuser_dict)
 
-    #return jsonify([{"ubsusers" : company_ubsusers_json}, {"transfer_log" : transfer_log_json}])
-    return  jsonify(company_ubsusers_json)
+    return jsonify(company_ubsusers_json)
+
+class users(db.Model):
+
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(30))
+    email = db.Column(db.String(30))
+    company = db.Column(db.Integer, ForeignKey('companys.id'))
+
+    def __init__(self, name, email, company):
+        self.name = name
+        self.email = email
+        self.company = company
+
+
+class companys(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
+    quota = db.Column(db.Integer)
+    users = relationship("users", backref="companys")
+
+    def __init__(self, name, quota):
+        self.name = name
+        self.quota = quota
 
 
 if __name__ == "__main__":
